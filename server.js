@@ -2,22 +2,16 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import mongooseConnection from "./mongo.js";
-import appRoutes from "../routes/index.js";
+import appRoutes from "./Routes/index.js";
 import fs from "fs";
 import dotenv from "dotenv";
 import https from "https";
-
 dotenv.config();
-
 const port = process.env.PORT || 4000;
-
 const app = express();
-
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
-
 mongooseConnection();
-
 app.use(
   cors({
     origin: "*",
@@ -25,13 +19,11 @@ app.use(
     credentials: true,
   })
 );
-
 app.get("/health", (req, res) => {
   return res.status(200).json({
     msg: "Server is up and running",
   });
 });
-
 app.use("/api", appRoutes);
 if (process.env.DEPLOY_ENV === "local") {
   app.listen(4000, (req, res) => {
